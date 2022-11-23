@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "sourceMap": true,
+    "declaration": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "pretty": true,
+    "skipLibCheck": true,
+    "lib": ["es2019"],
+    "jsx": "preserve"
+  },
+  "sourceMap": true,
+  "outDir": ".build",
+  "moduleResolution": "node",
+  "rootDir": "./"
+}
