@@ -1,12 +1,12 @@
-import * as express from "express";
-import * as core from "express-serve-static-core";
-import { Request } from "express";
-import { sync } from "./models";
-import { ApolloServer } from "apollo-server-express";
-import { typeDefs, resolvers } from "./routes/graphql";
-import { CreateRoutes } from "./controllers/CreateRoutes";
-import { jwtController } from "./controllers";
-import { RateLimiterMiddleware } from "./middlewares";
+import * as express from 'express';
+import * as core from 'express-serve-static-core';
+import { Request } from 'express';
+import { sync } from './models';
+import { ApolloServer } from 'apollo-server-express';
+import { typeDefs, resolvers } from './routes/graphql';
+import { CreateRoutes } from './controllers/CreateRoutes';
+import { jwtController } from './controllers';
+import { RateLimiterMiddleware } from './middlewares';
 
 const createApp = async (): Promise<core.Express> => {
   await sync();
@@ -23,9 +23,7 @@ const createApp = async (): Promise<core.Express> => {
           return request.clientIp || undefined;
         };
 
-        const getDeviceUniqueIdentifier = (
-          request: Request,
-        ): string | undefined => {
+        const getDeviceUniqueIdentifier = (request: Request): string | undefined => {
           if (request?.headers?.deviceUniqueIdentifier) {
             return request.headers.deviceUniqueIdentifier.toString();
           }
@@ -35,18 +33,20 @@ const createApp = async (): Promise<core.Express> => {
         const apolloServer = new ApolloServer({
           typeDefs,
           resolvers,
-          playground: false,
           introspection: true,
           context: async ({ req }: { req: Request }) => ({
             ...(await jwtController.createAuthScope(req.headers.authorization)),
             ip: getIpAddress(req),
             deviceUniqueIdentifier: getDeviceUniqueIdentifier(req),
-            userAgent: req.headers["user-agent"],
+            userAgent: req.headers['user-agent'],
           }),
         });
-        apolloServer.applyMiddleware({
-          app,
-        });
+        apolloServer.start().then(() =>
+          apolloServer.applyMiddleware({
+            app,
+          }),
+        );
+
         resolve(app);
       }
     };
