@@ -1,22 +1,20 @@
-import * as Sequelize from "sequelize";
-import { config } from "../config";
-import { initUser } from "./User";
-
-if (process.env.NODE_ENV !== "production") {
-  Sequelize.Promise.config({
-    longStackTraces: true,
-  });
-}
+import * as Sequelize from 'sequelize';
+import { config } from '../config';
+import { DataTypeAbstract, DefineAttributeColumnOptions } from 'sequelize';
+import { initUser } from './User';
 
 declare global {
   type SequelizeAttributes<T extends { [key: string]: any }> = {
-    [P in keyof T]: string | Sequelize.DataTypeAbstract | Sequelize.DefineAttributeColumnOptions;
+    [P in keyof T]: string | DataTypeAbstract | DefineAttributeColumnOptions;
   };
 }
 
 const sequelize = new Sequelize({
   ...config.mysql,
-  dialect: "mysql",
+  dialect: 'mysql',
+  define: {
+    charset: 'utf8mb4',
+  },
   logging: false,
   operatorsAliases: false,
   pool: {
@@ -30,20 +28,16 @@ const db = {
 };
 
 Object.keys(db)
-  .map((key) => db[key])
+  .map(key => db[key])
   .forEach((model: any) => {
     if (model.associate) {
       model.associate(db);
     }
   });
 
-const sync = async (options?: { force?: boolean }) => {
-  const force = (options && options.force) || false;
-  if (force && config.nodeEnv === "production") {
-    throw new Error("Models: Cannot force sync in a production environment");
-  }
+const sync = async () => {
   try {
-    await sequelize.sync({ force });
+    await sequelize.sync({ force: false });
   } catch (error) {
     throw error;
   }

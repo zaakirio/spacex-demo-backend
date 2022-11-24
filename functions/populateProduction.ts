@@ -1,5 +1,5 @@
 import { ensureEnvVars } from "../config";
-import { populate } from "../helpers/populate";
+import { populate } from "../helpers/productionPopulate";
 
 exports.handler = async (event, context) => {
   ensureEnvVars();

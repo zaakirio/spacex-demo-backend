@@ -1,4 +1,4 @@
-service: backend
+service: example
 
 useDotenv: true
 
@@ -8,7 +8,7 @@ provider:
   name: aws
   runtime: nodejs16.x
   memorySize: 1024
-  timeout: 60
+  timeout: 30
   vpc:
     securityGroupIds:
       - Fn::GetAtt: [VPCStaticIP, DefaultSecurityGroup]
@@ -21,7 +21,7 @@ provider:
         - ec2:CreateNetworkInterface
         - ec2:DeleteNetworkInterface
         - ec2:DescribeNetworkInterfaces
-      Resource: "*"
+      Resource: '*'
   environment:
     SERVERLESS_EXPRESS_PLATFORM: aws
     NODE_ENV: production
@@ -34,16 +34,12 @@ provider:
     S3_BUCKET: ${file(serverless-${self:provider.stage}.yml):S3_BUCKET}
     CUSTOM_AWS_ACCESS_KEY_ID: ${file(serverless-${self:provider.stage}.yml):CUSTOM_AWS_ACCESS_KEY_ID}
     CUSTOM_AWS_SECRET_ACCESS_KEY: ${file(serverless-${self:provider.stage}.yml):CUSTOM_AWS_SECRET_ACCESS_KEY}
+    JWT_SECRET: ${file(serverless-${self:provider.stage}.yml):JWT_SECRET}
     DEBUG_CONFIG: ${file(serverless-${self:provider.stage}.yml):DEBUG_CONFIG}
-    ADMIN_PASSWORD: ${file(serverless-${self:provider.stage}.yml):ADMIN_PASSWORD}
-    ONESIGNAL_KEY: ${file(serverless-${self:provider.stage}.yml):ONESIGNAL_KEY}
-    ONESIGNAL_APP: ${file(serverless-${self:provider.stage}.yml):ONESIGNAL_APP}
-    ONESIGNAL_KEY_PROVIDER: ${file(serverless-${self:provider.stage}.yml):ONESIGNAL_KEY_PROVIDER}
-    ONESIGNAL_APP_PROVIDER: ${file(serverless-${self:provider.stage}.yml):ONESIGNAL_APP_PROVIDER}
     SENTRY_DSN: ${file(serverless-${self:provider.stage}.yml):SENTRY_DSN}
-    CMS_APP_TOKEN: ${file(serverless-${self:provider.stage}.yml):CMS_APP_TOKEN}
-    MOBILE_APP_TOKEN: ${file(serverless-${self:provider.stage}.yml):MOBILE_APP_TOKEN}
-    WEBSITE_APP_TOKEN: ${file(serverless-${self:provider.stage}.yml):WEBSITE_APP_TOKEN}
+    JWKS_URI: ${file(serverless-${self:provider.stage}.yml):JWKS_URI}
+    JWT_AUDIENCE: ${file(serverless-${self:provider.stage}.yml):JWT_AUDIENCE}
+    JWT_ISSUER: ${file(serverless-${self:provider.stage}.yml):JWT_ISSUER}
 
 custom:
   mySQLHost:
@@ -67,6 +63,8 @@ functions:
     handler: functions/dbUp.handler
   dbDown:
     handler: functions/dbDown.handler
+  populate:
+    handler: functions/populate.handler
   keepAlive:
     handler: functions/keepAlive.handler
     events:
@@ -223,7 +221,7 @@ resources:
           - Ref: SubnetPrivate2
 
     RDSSecurityGroup:
-      Type: "AWS::EC2::SecurityGroup"
+      Type: 'AWS::EC2::SecurityGroup'
       Properties:
         GroupDescription: SecurityGroup ${self:service}/${self:provider.stage}
         SecurityGroupIngress:

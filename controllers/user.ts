@@ -1,126 +1,31 @@
-import { AuthScope } from "../config";
-import { UserAttributes } from "../models/User";
-import { db } from "../models";
-import { Op } from "sequelize";
-import { emailController } from "./email";
-import { imageController } from "./image";
+import { AuthScope } from '../config';
+import { db } from '../models';
 
-const get = async (
-  {
-    userId,
-  }: {
-    userId: string;
-  },
-  authScope: AuthScope,
-): Promise<UserAttributes> => {
-  if (
-    authScope.userId !== userId 
-  ) {
-    throw new Error(
-      "Controller:User::Cannot access another users information.",
-    );
-  }
+import { UserAttributes } from '../models/User';
 
+const get = async ({ userId }: { userId: string }, authScope: AuthScope): Promise<UserAttributes> => {
   const user = await db.User.findByPk(userId);
   if (!user) {
-    throw new Error("Controller:User::Could not find user");
+    throw new Error('Controller:User::Could not find user.');
   }
 
-
-  return await imageController.refactorUser({ user }, authScope);
+  return user;
 };
 
-const edit = async (
-  {
-    id,
-    firstName,
-    email,
-    profileImage,
-  }: {
-    id: string;
-    firstName?: string | null;
-    email?: string | null;
-    profileImage?: string | null;
-  },
-  authScope: AuthScope,
-): Promise<UserAttributes> => {
-  if (
-    authScope.userId !== id 
-  ) {
-    throw new Error(
-      "Controller:User::Cannot access another users information.",
-    );
+const fromAuth = async (authScope: AuthScope): Promise<UserAttributes | undefined> => {
+  if (!authScope.userId) {
+    return undefined;
   }
 
-  const user = await db.User.findByPk(id);
-  if (!user) {
-    throw new Error("Controller:User::Could not find user");
-  }
-
-  if (email && !emailController.isValid({ email })) {
-    throw new Error("Controller:User::Please send a valid email address.");
-  }
-
-  const editUser = await db.User.update(
-    {
-      firstName: firstName ?? undefined,
-      email: email ? email : undefined,
-      profileImage: profileImage ?? undefined,
-    },
-    { where: { id: { [Op.eq]: user.id } } },
-  );
-  if (!editUser) {
-    throw new Error("Controller:User::Could not update user.");
-  }
-
-  const dbUser = await get({ userId: id }, authScope);
-  if (!dbUser) {
-    throw new Error("Controller:User::Could not get user.");
-  }
-
-  return await imageController.refactorUser(
-    { user: dbUser },
-    authScope,
-  );
-};
-
-const remove = async (
-  {
-    userId,
-  }: {
-    userId: string;
-  },
-  authScope: AuthScope,
-): Promise<boolean> => {
-  if (
-    authScope.userId !== userId 
-  ) {
-    throw new Error(
-      "Controller:User::Cannot access another users information.",
-    );
-  }
-
-  const user = await db.User.findByPk(userId);
-
-  if (!user) {
-    throw new Error("Controller:User::Could not find user.");
-  }
-
-  const destroyUser = await db.User.destroy({
-    where: { id: { [Op.eq]: user.id } },
+  const [userInstance] = await db.User.findOrCreate({
+    where: { id: authScope.userId },
   });
-  if (!destroyUser) {
-    throw new Error(
-      "Controller:User::Could not delete user, please try again.",
-    );
-  }
 
-  return true;
+  return userInstance;
 };
 
 const userController = {
   get,
-  edit,
-  remove
+  fromAuth,
 };
 export { userController };

@@ -1,6 +1,6 @@
 import { gql } from "apollo-server-express";
 
-export const pagination = gql`
+export const Pagination = gql`
   input PaginationInput {
     limit: Int!
     offset: Int!

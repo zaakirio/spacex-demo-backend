@@ -1,4 +1,4 @@
-import * as Sequelize from "sequelize";
+import * as Sequelize from 'sequelize';
 
 interface UserAttributes {
   id?: string;
@@ -23,16 +23,9 @@ const initUser = (sequelize: Sequelize.Sequelize): UserModel => {
     email: { type: Sequelize.STRING, allowNull: true },
     profileImage: { type: Sequelize.STRING, allowNull: true },
   };
-  const User = sequelize.define<UserInstance, UserAttributes>(
-    "User",
-    attributes,
-  );
+  const User = sequelize.define<UserInstance, UserAttributes>('User', attributes);
+
   return User;
 };
 
-export {
-  initUser,
-  UserAttributes,
-  UserInstance,
-  UserModel,
-};
+export { initUser, UserAttributes, UserInstance, UserModel };

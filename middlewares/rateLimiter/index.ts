@@ -1,8 +1,8 @@
-import { RateLimiterMySQL } from "rate-limiter-flexible";
-import { Handler, Request } from "express";
-import { db } from "../../models";
-import { config } from "../../config/";
-import * as requestIp from "request-ip";
+import { RateLimiterMySQL } from 'rate-limiter-flexible';
+import { Handler, Request } from 'express';
+import { db } from '../../models';
+import { config } from '../../config/';
+import * as requestIp from 'request-ip';
 
 class RateLimiterMiddleware extends RateLimiterMySQL {
   constructor(ready) {
@@ -10,7 +10,7 @@ class RateLimiterMiddleware extends RateLimiterMySQL {
       {
         storeClient: db.sequelize,
         dbName: config.mysql.database,
-        points: 25,
+        points: 10,
         duration: 1,
       },
       ready,
@@ -21,22 +21,14 @@ class RateLimiterMiddleware extends RateLimiterMySQL {
     // @ts-ignore
     request.clientIp = ip;
 
-    // try {
-    //   const value = jwtController.createAuthScope(
-    //     request.headers.authorization,
-    //   );
-    //   if (value.userId) {
-    //     await this.consume(value.userId);
-    //   } else if (ip) {
-    //     await this.consume(ip);
-    //   }
-
-    //   next();
-    // } catch (error) {
-    //   throw new Error(
-    //     "Middleware:RateLimiter::Too many requests, please try again.",
-    //   );
-    // }
+    try {
+      if (ip) {
+        await this.consume(ip);
+      }
+      next();
+    } catch (error) {
+      throw new Error('Middleware:RateLimiter::Too many requests, please try again.');
+    }
   };
 }
 

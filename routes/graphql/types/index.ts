@@ -1,16 +1,7 @@
-import { user } from "./typeDeclarations/user";
-import { blockApp } from "./typeDeclarations/blockApp";
-import { s3 } from "./typeDeclarations/s3";
-import { pagination } from "./typeDeclarations/pagination";
-import { date } from "./typeDeclarations/date";
-import { queries, mutations } from "./resolvers";
+import { queries, mutations } from './resolvers';
+import { User } from './typeDeclarations/user';
+import { blockApp } from './typeDeclarations/blockApp';
+import { Pagination } from './typeDeclarations/pagination';
+import { date } from './typeDeclarations/date';
 
-export const typeDefs = [
-  user,
-  blockApp,
-  s3,
-  pagination,
-  date,
-  queries,
-  mutations
-];
+export const typeDefs = [mutations, queries, date, User, Pagination, blockApp];

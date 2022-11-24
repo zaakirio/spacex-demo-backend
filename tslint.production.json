@@ -2,10 +2,5 @@
   "extends": ["./tslint.json"],
   "rules": {
     "no-console": [true, "log"]
-  },
-  "compilerOptions": {
-    "sourceMap": true,
-    "inlineSources": true,
-    "sourceRoot": "/"
   }
 }
