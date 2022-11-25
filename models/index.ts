@@ -42,4 +42,4 @@ const sync = async () => {
   }
 };
 
-export { sync, db };
+export { sync, db, sequelize };
