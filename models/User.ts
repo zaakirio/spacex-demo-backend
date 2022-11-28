@@ -1,4 +1,5 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
+import { Address, AddressAttributes } from './Address';
 
 interface UserAttributes {
   id?: string;
@@ -6,15 +7,11 @@ interface UserAttributes {
   contactNumber?: string;
   email?: string;
   profileImage?: string;
+  addressId?: string;
+  address?: AddressAttributes;
 }
 
-class User extends Model<UserAttributes, UserAttributes> implements UserAttributes {
-  id?: string;
-  firstName?: string | null;
-  contactNumber?: string;
-  email?: string;
-  profileImage?: string;
-
+class User extends Model<UserAttributes> {
   static initModel(sequelize: Sequelize) {
     User.init(
       {
@@ -27,13 +24,14 @@ class User extends Model<UserAttributes, UserAttributes> implements UserAttribut
         contactNumber: { type: DataTypes.STRING, allowNull: true },
         email: { type: DataTypes.STRING, allowNull: true },
         profileImage: { type: DataTypes.STRING, allowNull: true },
+        addressId: { type: DataTypes.UUID, allowNull: false },
       },
       {
         sequelize,
-        tableName: 'User',
-        timestamps: false,
       },
     );
+
+    User.belongsTo(Address, { foreignKey: 'addressId', as: 'address' });
     return User;
   }
 }

@@ -2,92 +2,84 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-const { ApolloServer } = require('@apollo/server');
-import { ApolloServerPluginLandingPageGraphQLPlayground } from '@apollo/server-plugin-landing-page-graphql-playground';
-const { expressMiddleware } = require('@apollo/server/express4');
-const serverlessExpress = require('@vendia/serverless-express');
-const express = require('express');
-const { json } = require('body-parser');
-const cors = require('cors');
+import { ApolloServer } from '@apollo/server';
+import { config } from './config';
+import { expressMiddleware } from '@apollo/server/express4';
+import serverlessExpress, { getCurrentInvoke } from '@vendia/serverless-express';
+import * as express from 'express';
+import * as core from 'express-serve-static-core';
+import { json } from 'body-parser';
+import cors from 'cors';
 import { typeDefs, resolvers } from './routes/graphql';
+import { jwtController } from './controllers';
+import * as Sentry from '@sentry/serverless';
+import * as Tracing from '@sentry/tracing';
+import { RateLimiterMiddleware } from './middlewares';
+import { sync } from './models';
+import helmet from 'helmet';
+
+Sentry.AWSLambda.init({
+  dsn: config.sentryDsn,
+  environment: config.nodeEnv,
+  integrations: [new Tracing.Integrations.Mysql(), new Sentry.Integrations.Http({ tracing: true })],
+  tracesSampleRate: 1.0,
+  debug: config.nodeEnv !== 'production',
+});
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  introspection: true,
-  playground: true,
-  plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+  introspection: config.nodeEnv !== 'production',
 });
 
 server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
 
-const app = express();
-app.use(
-  cors(),
-  json(),
-  expressMiddleware(server, {
-    // The Express request and response objects are passed into
-    // your context initialization function
-    context: async ({ req, res }) => {
-      // Here is where you'll have access to the
-      // API Gateway event and Lambda Context
-      const { event, context } = serverlessExpress.getCurrentInvoke();
-      return {
-        expressRequest: req,
-        expressResponse: res,
-        lambdaEvent: event,
-        lambdaContext: context,
-      };
-    },
-  }),
-);
+const getIpAddress = (request: express.Request): string | undefined => {
+  //@ts-ignore
+  return request.clientIp || undefined;
+};
 
-exports.handler = serverlessExpress({ app });
+const getDeviceUniqueIdentifier = (request: express.Request): string | undefined => {
+  if (request?.headers?.deviceUniqueIdentifier) {
+    return request.headers.deviceUniqueIdentifier.toString();
+  }
+  return;
+};
 
-// import * as awsServerlessExpress from "aws-serverless-express";
+export const createApp = async (): Promise<core.Express> => {
+  const app = express();
+  app.use(helmet());
+  await sync();
 
-// import { createApp } from "./app";
-// import { ensureEnvVars } from "./config";
+  const ready = err => {
+    if (err) {
+      throw new Error("Controller:Server::Unfortunately you've requested too many items.");
+    }
 
-// // const Sentry = require("@sentry/serverless");
-// // const Tracing = require("@sentry/tracing");
+    app.use(
+      cors(),
+      json(),
+      expressMiddleware(server, {
+        context: async ({ req, res }) => {
+          const { event, context } = getCurrentInvoke();
+          return {
+            expressRequest: req,
+            expressResponse: res,
+            lambdaEvent: event,
+            lambdaContext: context,
+            ...(await jwtController.createAuthScope(req.headers.authorization)),
+            ip: getIpAddress(req),
+            deviceUniqueIdentifier: getDeviceUniqueIdentifier(req),
+            userAgent: req.headers['user-agent'],
+          };
+        },
+      }),
+    );
+  };
 
-// // Sentry.AWSLambda.init({
-// //   dsn: config.sentryDsn,
-// //   environment:
-// //     process.env.NODE_ENV !== "production" ? "development" : "production",
-// //   integrations: [
-// //     new Tracing.Integrations.Mysql(),
-// //     new Sentry.Integrations.Http({ tracing: true }),
-// //   ],
-// //   tracesSampleRate: 1.0,
-// //   breadcrumbs: true,
-// // });
+  app.use(new RateLimiterMiddleware(ready).middleware);
 
-// exports.handler =
-//   // Sentry.AWSLambda.wrapHandler(
+  return app;
+};
 
-//   async (event, context) => {
-//     ensureEnvVars();
-//     try {
-//       process.setMaxListeners(0);
-//       process.on("warning", w => {
-//         console.error("=> warning => ", w.stack || w);
-//       });
-
-//       const app = await createApp();
-//       const server = awsServerlessExpress.createServer(app);
-
-//       try {
-//         if (event && event.body) {
-//           console.info(JSON.stringify({ body: event.body }));
-//         }
-//       } catch {}
-
-//       return awsServerlessExpress.proxy(server, event, context, "PROMISE")
-//         .promise;
-//     } catch (error) {
-//       console.error(error);
-//       throw error;
-//     }
-//   };
+exports.handler = Sentry.AWSLambda.wrapHandler(serverlessExpress({ app: createApp }));

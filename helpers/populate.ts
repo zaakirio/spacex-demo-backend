@@ -1,8 +1,8 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
 }
-import { db } from "../models";
-import { cleanDb } from "../helpers/testHelpers";
+import { db } from '../models';
+import { cleanDb } from '../helpers/testHelpers';
 
 const populate = async () => {
   await cleanDb();

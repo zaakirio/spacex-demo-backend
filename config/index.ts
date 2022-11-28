@@ -1,4 +1,5 @@
 import { ensureEnvVars } from './ensureEnvVars';
+import { nodeEnv, NodeEnv } from './nodeEnv';
 
 interface AuthScope {
   userId?: string;
@@ -13,6 +14,7 @@ interface Config {
   secretAccessKey: string;
   bucketName: string;
   jwtSecret: string;
+  nodeEnv: NodeEnv;
   mysql: {
     database: string;
     host: string;
@@ -38,6 +40,7 @@ const config: Config = {
   secretAccessKey: process.env.CUSTOM_AWS_SECRET_ACCESS_KEY || '',
   bucketName: process.env.S3_BUCKET || '',
   jwtSecret: process.env.JWT_SECRET || '',
+  nodeEnv,
   mysql: {
     database: process.env.MYSQL_DATABASE || '',
     host: process.env.MYSQL_HOST || '',

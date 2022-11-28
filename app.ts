@@ -27,7 +27,7 @@
 //           if (request?.headers?.deviceUniqueIdentifier) {
 //             return request.headers.deviceUniqueIdentifier.toString();
 //           }
-//           return;
+//           return;–
 //         };
 
 //         const apolloServer = new ApolloServer({

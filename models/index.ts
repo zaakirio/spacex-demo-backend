@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import { config } from '../config';
 import { DataTypeAbstract, ModelAttributeColumnOptions } from 'sequelize';
 import { User } from './User';
+import { Address } from './Address';
 
 declare global {
   type SequelizeAttributes<T extends { [key: string]: any }> = {
@@ -23,6 +24,7 @@ const sequelize = new Sequelize({
 
 const db = {
   sequelize,
+  Address: Address.initModel(sequelize),
   User: User.initModel(sequelize),
 };
 
