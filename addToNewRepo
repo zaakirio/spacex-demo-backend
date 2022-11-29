@@ -5,14 +5,16 @@ if [ -n "$1" ]; then
   cd $(basename "$1" ".${1##*.}")
   git init
   git pull https://github.com/Level-Software-Development/template-backend
+  cp .env-example .env
   if [ -n "$2" ]; then
     sed -i -e "s/example/$2/" serverless.yml
+    sed -i -e "s/exampleDB/$2/" .env
   else
     sed -i -e "s/example/${basename}/" serverless.yml
+    sed -i -e "s/exampleDB/${basename}/" .env
   fi
   sed -i -e "s/example-name/${basename}/" template-readme.md
-  cp .env-example .env
-  rm -rf template-backend.git addToNewRepo serverless.yml-e template-readme.md-e README.md
+  rm -rf template-backend.git addToNewRepo serverless.yml-e template-readme.md-e README.md .env-e
   mv template-readme.md README.md
   git add .
   git commit -m "first commit"
