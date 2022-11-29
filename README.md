@@ -49,27 +49,19 @@ For full list and versions please see: [package.json](https://github.com/Level-S
 
 ## :arrow_forward: Usage
 
-To get started, create a new repo in github. Then:
+To get started, create a new repo in github. Then go to the directory you would like to make your repo and run:
 
 ```sh
-git clone <YOUR_REPO>
-cd <YOUR_REPO>
-git clone https://github.com/Level-Software-Development/template-backend
-rm -rf template-backend.git
-git add .
-git commit -m "first commit"
-git push -u origin main
+curl 'https://github.com/Level-Software-Development/template-backend/blob/main/.env-example' > addToNewRepo
 ```
 
-Then install the package using
+Then run the bash script giving your new repo address and optionally name of the new database as parameters
 
 ```sh
-yarn install
+bash addToNewRepo <YOUR_REPO> <DATABASE_NAME>
 ```
 
-Duplicate the '.env-example' file, calling the new file '.env' and add in the necessary keys.
-
-Update the database name or 'server' at the top of the serverless.yml file.
+Add in the necessary keys to .env.
 
 Then run:
 
