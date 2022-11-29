@@ -8,14 +8,15 @@ if [ -n "$1" ]; then
   cp .env-example .env
   if [ -n "$2" ]; then
     sed -i -e "s/example/$2/" serverless.yml
-    sed -i -e "s/exampleDB/$2/" .env
+    sed -i -e "s/exampleDB/$2/" .env .env-example
   else
     sed -i -e "s/example/${basename}/" serverless.yml
-    sed -i -e "s/exampleDB/${basename}/" .env
+    sed -i -e "s/exampleDB/${basename}/" .env .env-example
   fi
-  sed -i -e "s/example-name/${basename}/" template-readme.md
+  sed -i -e "s/example_name/${basename}/" template-readme.md
   rm -rf template-backend.git generateBackend serverless.yml-e template-readme.md-e README.md .env-e
   mv template-readme.md README.md
+  yarn
   git add .
   git commit -m "first commit"
   git push -u origin main
