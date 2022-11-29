@@ -1,0 +1,36 @@
+echo '
+ _      ________      ________ _      
+| |    |  ____\ \    / /  ____| |     
+| |    | |__   \ \  / /| |__  | |     
+| |    |  __|   \ \/ / |  __| | |     
+| |____| |____   \  /  | |____| |____ 
+|______|______|   \/   |______|______|
+                                         
+'
+printf "\nThank you for using the Level Software Development backend template!\n\n\n"
+if [ -n "$1" ]; then
+  basename=$(basename "$1" ".${1##*.}")
+  git clone $1
+  cd $(basename "$1" ".${1##*.}")
+  git init
+  git pull https://github.com/Level-Software-Development/template-backend
+  cp .env-example .env
+  if [ -n "$2" ]; then
+    sed -i -e "s/example/$2/" serverless.yml
+    sed -i -e "s/exampleDB/$2/" .env .env-example
+  else
+    sed -i -e "s/example/${basename}/" serverless.yml
+    sed -i -e "s/exampleDB/${basename}/" .env .env-example
+  fi
+  sed -i -e "s/example_name/${basename}/" template-readme.md
+  rm -rf template-backend.git generateBackend serverless.yml-e template-readme.md-e README.md .env-e
+  mv template-readme.md README.md
+  yarn
+  git add .
+  git commit -m "first commit"
+  git push -u origin main
+  cd ../
+  rm -rf generateBackend
+else
+  printf "You did not supply any parameters\n"
+fi
