@@ -1,12 +1,12 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+import { Sequelize, Model, DataTypes, InferAttributes } from 'sequelize';
 
-interface AddressAttributes {
-  id?: string;
-  address?: string | null;
-  postcode?: string | null;
-}
+type AddressAttributes = InferAttributes<Address>;
 
 class Address extends Model<AddressAttributes> {
+  declare id?: string;
+  declare address?: string | null;
+  declare postcode?: string | null;
+
   static initModel(sequelize: Sequelize) {
     Address.init(
       {

@@ -1,11 +1,11 @@
-import * as supertest from "supertest";
-import { db } from "../models";
+import * as supertest from 'supertest';
+import { db } from '../models';
 
 const cleanDb = async () => {
-  await db.sequelize.query("SET FOREIGN_KEY_CHECKS = 0", { raw: true });
+  await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0', { raw: true });
   await db.sequelize.drop();
   await db.sequelize.sync();
-  await db.sequelize.query("SET FOREIGN_KEY_CHECKS = 1", { raw: true });
+  await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1', { raw: true });
 };
 
 const checkApolloResponse = (response: supertest.Response) => {

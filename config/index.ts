@@ -53,7 +53,7 @@ const config: Config = {
   jwksIssuer: process.env.JWT_ISSUER || '',
 };
 
-if (Boolean(parseInt(process.env.DEBUG_CONFIG || '0', 10))) {
+if (parseInt(process.env.DEBUG_CONFIG || '0', 10)) {
   console.info(JSON.stringify({ config }, null, 2));
 }
 

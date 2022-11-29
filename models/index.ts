@@ -37,11 +37,7 @@ Object.keys(db)
   });
 
 const sync = async () => {
-  try {
-    await sequelize.sync({ force: false });
-  } catch (error) {
-    throw error;
-  }
+  await sequelize.sync({ force: false });
 };
 
 export { sync, db, sequelize };

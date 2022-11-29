@@ -16,6 +16,7 @@ const createAuthScope = async (token?: string): Promise<AuthScope> => {
 
   const getKey = (header, callback) => {
     client.getSigningKey(header.kid, (err, key) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       callback(null, key?.publicKey || key?.rsaPublicKey);
     });

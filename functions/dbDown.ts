@@ -1,5 +1,5 @@
-import { ensureEnvVars } from "../config";
-import { umzug } from "../migrate";
+import { ensureEnvVars } from '../config';
+import { umzug } from '../migrate';
 
 exports.handler = async (event, context) => {
   ensureEnvVars();

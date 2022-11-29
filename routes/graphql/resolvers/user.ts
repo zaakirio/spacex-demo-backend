@@ -1,21 +1,13 @@
-import { GraphqlContext } from "../../../config";
-import { QueryUserArgs } from "../../../common/types/backend";
-import { userController } from "../../../controllers";
-import { UserAttributes } from "../../../models/User";
+import { GraphqlContext } from '../../../config';
+import { QueryUserArgs } from '../../../common/types/backend';
+import { userController } from '../../../controllers';
+import { UserAttributes } from '../../../models/User';
 
-const user = async (
-  rootValue,
-  { input }: QueryUserArgs,
-  context: GraphqlContext,
-): Promise<UserAttributes> => {
+const user = async (rootValue, { input }: QueryUserArgs, context: GraphqlContext): Promise<UserAttributes> => {
   return userController.get(input, context);
 };
 
-const addUser = async (
-  rootValue,
-  _,
-  context: GraphqlContext,
-): Promise<UserAttributes | null> => {
+const addUser = async (rootValue, _, context: GraphqlContext): Promise<UserAttributes | null> => {
   return null;
 };
 

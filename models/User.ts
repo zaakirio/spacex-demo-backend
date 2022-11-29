@@ -1,17 +1,17 @@
-import { Sequelize, Model, DataTypes } from 'sequelize';
+import { Sequelize, Model, DataTypes, InferAttributes } from 'sequelize';
 import { Address, AddressAttributes } from './Address';
 
-interface UserAttributes {
-  id?: string;
-  firstName?: string | null;
-  contactNumber?: string;
-  email?: string;
-  profileImage?: string;
-  addressId?: string;
-  address?: AddressAttributes;
-}
+type UserAttributes = InferAttributes<User>;
 
 class User extends Model<UserAttributes> {
+  declare id?: string;
+  declare firstName?: string | null;
+  declare contactNumber?: string;
+  declare email?: string;
+  declare profileImage?: string;
+  declare addressId?: string;
+  declare address?: AddressAttributes;
+
   static initModel(sequelize: Sequelize) {
     User.init(
       {
