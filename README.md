@@ -55,10 +55,10 @@ To get started, create a new repo in github. Then go to the directory you would 
 curl 'https://github.com/Level-Software-Development/template-backend/blob/main/addToNewRepo' > addToNewRepo
 ```
 
-Then run the bash script giving your new repo address and optionally name of the new database as parameters
+Then run the bash script giving your new repo URL and optionally name of the new database as parameters
 
 ```sh
-bash addToNewRepo <YOUR_REPO> <DATABASE_NAME>
+bash addToNewRepo <YOUR_REPO_URL> <DATABASE_NAME>
 ```
 
 Add in the necessary keys to .env.
