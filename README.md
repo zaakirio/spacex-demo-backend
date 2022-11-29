@@ -1,4 +1,4 @@
-# :space_invader: Serverless backend Template
+# :space_invader: Serverless Backend Template
 
 <p>
   <!-- <a href="https://github.com/Level-Software-Development/template-backend/actions/workflows/npm-publish.yml">
@@ -52,7 +52,7 @@ For full list and versions please see: [package.json](https://github.com/Level-S
 To get started, create a new repo in github. Then go to the directory you would like to make your repo and run:
 
 ```sh
-curl 'https://github.com/Level-Software-Development/template-backend/blob/main/.env-example' > addToNewRepo
+curl 'https://github.com/Level-Software-Development/template-backend/blob/main/addToNewRepo' > addToNewRepo
 ```
 
 Then run the bash script giving your new repo address and optionally name of the new database as parameters
