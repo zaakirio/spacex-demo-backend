@@ -52,13 +52,13 @@ For full list and versions please see: [package.json](https://github.com/Level-S
 To get started, create a new repo in github. Then go to the directory you would like to make your repo and run:
 
 ```sh
-curl 'https://raw.githubusercontent.com/Level-Software-Development/template-backend/main/addToNewRepo' > addToNewRepo
+curl 'https://raw.githubusercontent.com/Level-Software-Development/template-backend/main/generateBackend' > generateBackend
 ```
 
 Then run the bash script giving your new repo URL and optionally name of the new database as parameters
 
 ```sh
-bash addToNewRepo <YOUR_REPO_URL> <DATABASE_NAME>
+bash generateBackend <YOUR_REPO_URL> <DATABASE_NAME>
 ```
 
 Add in the necessary keys to .env.
