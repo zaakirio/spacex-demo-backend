@@ -23,7 +23,7 @@ if [ -n "$1" ]; then
     sed -i -e "s/exampleDB/${basename}/" .env .env-example
   fi
   sed -i -e "s/example_name/${basename}/" template-readme.md
-  rm -rf template-backend.git generateBackend serverless.yml-e template-readme.md-e README.md .env-e
+  rm -rf template-backend.git generateBackend serverless.yml-e template-readme.md-e README.md .env-e .env-example-e
   mv template-readme.md README.md
   yarn
   git add .
