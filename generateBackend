@@ -1,4 +1,13 @@
-printf "\n\n\nThank you for using the Level Software Development backend template!\n\n\n"
+echo '
+ _      ________      ________ _      
+| |    |  ____\ \    / /  ____| |     
+| |    | |__   \ \  / /| |__  | |     
+| |    |  __|   \ \/ / |  __| | |     
+| |____| |____   \  /  | |____| |____ 
+|______|______|   \/   |______|______|
+                                         
+'
+printf "\nThank you for using the Level Software Development backend template!\n\n\n"
 if [ -n "$1" ]; then
   basename=$(basename "$1" ".${1##*.}")
   git clone $1
