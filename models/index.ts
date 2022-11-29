@@ -1,11 +1,12 @@
-import * as Sequelize from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { config } from '../config';
-import { DataTypeAbstract, DefineAttributeColumnOptions } from 'sequelize';
-import { initUser } from './User';
+import { DataTypeAbstract, ModelAttributeColumnOptions } from 'sequelize';
+import { User } from './User';
+import { Address } from './Address';
 
 declare global {
   type SequelizeAttributes<T extends { [key: string]: any }> = {
-    [P in keyof T]: string | DataTypeAbstract | DefineAttributeColumnOptions;
+    [P in keyof T]: string | DataTypeAbstract | ModelAttributeColumnOptions;
   };
 }
 
@@ -16,7 +17,6 @@ const sequelize = new Sequelize({
     charset: 'utf8mb4',
   },
   logging: false,
-  operatorsAliases: false,
   pool: {
     acquire: 30000,
   },
@@ -24,7 +24,8 @@ const sequelize = new Sequelize({
 
 const db = {
   sequelize,
-  User: initUser(sequelize),
+  Address: Address.initModel(sequelize),
+  User: User.initModel(sequelize),
 };
 
 Object.keys(db)
@@ -36,11 +37,7 @@ Object.keys(db)
   });
 
 const sync = async () => {
-  try {
-    await sequelize.sync({ force: false });
-  } catch (error) {
-    throw error;
-  }
+  await sequelize.sync({ force: false });
 };
 
-export { sync, db };
+export { sync, db, sequelize };

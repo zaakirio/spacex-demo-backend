@@ -1,51 +1,96 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('dotenv').config();
 }
 
-import * as awsServerlessExpress from "aws-serverless-express";
+import { ApolloServer } from '@apollo/server';
+import { config } from './config';
+import { expressMiddleware } from '@apollo/server/express4';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const serverlessExpress = require('@vendia/serverless-express');
+import * as express from 'express';
+import * as core from 'express-serve-static-core';
+import { json } from 'body-parser';
+import * as cors from 'cors';
+import { typeDefs, resolvers } from './routes/graphql';
+import { jwtController } from './controllers';
+import * as Sentry from '@sentry/serverless';
+import * as Tracing from '@sentry/tracing';
+import helmet from 'helmet';
+import { RateLimiterMiddleware } from './middlewares';
+import { sync } from './models';
+import { CreateRoutes } from './controllers/CreateRoutes';
 
-import { createApp } from "./app";
-import { ensureEnvVars } from "./config";
+Sentry.AWSLambda.init({
+  dsn: 'https://73ae4deff73f43f3ba593537e51b24fc@o4504241746411520.ingest.sentry.io/4504241755717636',
+  environment: config.nodeEnv,
+  integrations: [new Tracing.Integrations.GraphQL(), new Sentry.Integrations.Http({ tracing: true })],
+  tracesSampleRate: 1.0,
+  debug: config.nodeEnv !== 'production',
+});
 
-// const Sentry = require("@sentry/serverless");
-// const Tracing = require("@sentry/tracing");
+const getIpAddress = (request: express.Request): string | undefined => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  return request.clientIp || undefined;
+};
 
-// Sentry.AWSLambda.init({
-//   dsn: config.sentryDsn,
-//   environment:
-//     process.env.NODE_ENV !== "production" ? "development" : "production",
-//   integrations: [
-//     new Tracing.Integrations.Mysql(),
-//     new Sentry.Integrations.Http({ tracing: true }),
-//   ],
-//   tracesSampleRate: 1.0,
-//   breadcrumbs: true,
-// });
+const getDeviceUniqueIdentifier = (request: express.Request): string | undefined => {
+  if (request?.headers?.deviceUniqueIdentifier) {
+    return request.headers.deviceUniqueIdentifier.toString();
+  }
+  return;
+};
 
-exports.handler =
-  // Sentry.AWSLambda.wrapHandler(
+export const createApp = async (): Promise<core.Express> => {
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    introspection: config.nodeEnv !== 'production',
+  });
 
-  async (event, context) => {
-    ensureEnvVars();
-    try {
-      process.setMaxListeners(0);
-      process.on("warning", w => {
-        console.error("=> warning => ", w.stack || w);
-      });
+  server.startInBackgroundHandlingStartupErrorsByLoggingAndFailingAllRequests();
 
-      const app = await createApp();
-      const server = awsServerlessExpress.createServer(app);
+  const app = express();
+  await sync();
 
-      try {
-        if (event && event.body) {
-          console.info(JSON.stringify({ body: event.body }));
-        }
-      } catch {}
+  return new Promise((resolve, reject) => {
+    const ready = err => {
+      if (err) {
+        reject(err);
+      }
+      CreateRoutes(app);
 
-      return awsServerlessExpress.proxy(server, event, context, "PROMISE")
-        .promise;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+      app.use(
+        cors(),
+        json(),
+        expressMiddleware(server, {
+          context: async ({ req, res }) => {
+            const { event, context } = serverlessExpress.getCurrentInvoke();
+            return {
+              expressRequest: req,
+              expressResponse: res,
+              lambdaEvent: event,
+              lambdaContext: context,
+              ...(await jwtController.createAuthScope(req.headers.authorization)),
+              ip: getIpAddress(req),
+              deviceUniqueIdentifier: getDeviceUniqueIdentifier(req),
+              userAgent: req.headers['user-agent'],
+            };
+          },
+        }),
+        helmet(),
+      );
+      resolve(app);
+    };
+
+    app.use(new RateLimiterMiddleware(ready).middleware);
+  });
+};
+
+async function setup(event, context) {
+  const app = await createApp();
+  return serverlessExpress({ app })(event, context);
+}
+
+exports.handler = Sentry.AWSLambda.wrapHandler(setup);

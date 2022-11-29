@@ -1,9 +1,10 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
+export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -12,28 +13,19 @@ export type Scalars = {
   Int: number;
   Float: number;
   Date: any;
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any;
 };
-
 
 export type BlockApp = {
   __typename?: 'BlockApp';
-  title?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type BlockAppInput = {
+  appType?: InputMaybe<Scalars['String']>;
   buildVersion: Scalars['String'];
   deviceBrand: Scalars['String'];
-  appType?: Maybe<Scalars['String']>;
 };
-
-export enum CacheControlScope {
-  Public = 'PUBLIC',
-  Private = 'PRIVATE'
-}
-
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -47,13 +39,8 @@ export type PaginationInput = {
 
 export type Query = {
   __typename?: 'Query';
-  user: User;
   blockApp: BlockApp;
-};
-
-
-export type QueryUserArgs = {
-  input: UserInput;
+  user: User;
 };
 
 
@@ -62,16 +49,20 @@ export type QueryBlockAppArgs = {
 };
 
 
+export type QueryUserArgs = {
+  input: UserInput;
+};
+
 export type User = {
   __typename?: 'User';
-  id: Scalars['ID'];
-  email: Scalars['String'];
+  block?: Maybe<Scalars['Boolean']>;
   contactNumber?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Date']>;
+  email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
   lastName?: Maybe<Scalars['String']>;
   profileImage?: Maybe<Scalars['String']>;
-  block?: Maybe<Scalars['Boolean']>;
-  createdAt?: Maybe<Scalars['Date']>;
 };
 
 export type UserInput = {
@@ -86,21 +77,7 @@ export type ResolverTypeWrapper<T> = Promise<T> | T;
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-
-export type LegacyStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  fragment: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-
-export type NewStitchingResolver<TResult, TParent, TContext, TArgs> = {
-  selectionSet: string;
-  resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
-};
-export type StitchingResolver<TResult, TParent, TContext, TArgs> = LegacyStitchingResolver<TResult, TParent, TContext, TArgs> | NewStitchingResolver<TResult, TParent, TContext, TArgs>;
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | ResolverWithResolve<TResult, TParent, TContext, TArgs>
-  | StitchingResolver<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -114,7 +91,7 @@ export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   args: TArgs,
   context: TContext,
   info: GraphQLResolveInfo
-) => AsyncIterator<TResult> | Promise<AsyncIterator<TResult>>;
+) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -161,47 +138,39 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Query: ResolverTypeWrapper<{}>;
-  UserInput: UserInput;
-  String: ResolverTypeWrapper<Scalars['String']>;
-  User: ResolverTypeWrapper<User>;
-  ID: ResolverTypeWrapper<Scalars['ID']>;
+  BlockApp: ResolverTypeWrapper<BlockApp>;
+  BlockAppInput: BlockAppInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Date: ResolverTypeWrapper<Scalars['Date']>;
-  BlockAppInput: BlockAppInput;
-  BlockApp: ResolverTypeWrapper<BlockApp>;
-  Mutation: ResolverTypeWrapper<{}>;
-  CacheControlScope: CacheControlScope;
-  PaginationInput: PaginationInput;
+  ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
-  Upload: ResolverTypeWrapper<Scalars['Upload']>;
+  Mutation: ResolverTypeWrapper<{}>;
+  PaginationInput: PaginationInput;
+  Query: ResolverTypeWrapper<{}>;
+  String: ResolverTypeWrapper<Scalars['String']>;
+  User: ResolverTypeWrapper<User>;
+  UserInput: UserInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Query: {};
-  UserInput: UserInput;
-  String: Scalars['String'];
-  User: User;
-  ID: Scalars['ID'];
+  BlockApp: BlockApp;
+  BlockAppInput: BlockAppInput;
   Boolean: Scalars['Boolean'];
   Date: Scalars['Date'];
-  BlockAppInput: BlockAppInput;
-  BlockApp: BlockApp;
+  ID: Scalars['ID'];
+  Int: Scalars['Int'];
   Mutation: {};
   PaginationInput: PaginationInput;
-  Int: Scalars['Int'];
-  Upload: Scalars['Upload'];
+  Query: {};
+  String: Scalars['String'];
+  User: User;
+  UserInput: UserInput;
 };
 
-export type CacheControlDirectiveArgs = {   maxAge?: Maybe<Scalars['Int']>;
-  scope?: Maybe<CacheControlScope>; };
-
-export type CacheControlDirectiveResolver<Result, Parent, ContextType = any, Args = CacheControlDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
 export type BlockAppResolvers<ContextType = any, ParentType extends ResolversParentTypes['BlockApp'] = ResolversParentTypes['BlockApp']> = {
-  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -214,23 +183,19 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'input'>>;
   blockApp?: Resolver<ResolversTypes['BlockApp'], ParentType, ContextType, RequireFields<QueryBlockAppArgs, 'input'>>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'input'>>;
 };
 
-export interface UploadScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
-  name: 'Upload';
-}
-
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  block?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   contactNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   profileImage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  block?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -239,23 +204,6 @@ export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Upload?: GraphQLScalarType;
   User?: UserResolvers<ContextType>;
 };
 
-
-/**
- * @deprecated
- * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
- */
-export type IResolvers<ContextType = any> = Resolvers<ContextType>;
-export type DirectiveResolvers<ContextType = any> = {
-  cacheControl?: CacheControlDirectiveResolver<any, any, ContextType>;
-};
-
-
-/**
- * @deprecated
- * Use "DirectiveResolvers" root object instead. If you wish to get "IDirectiveResolvers", add "typesPrefix: I" to your config.
- */
-export type IDirectiveResolvers<ContextType = any> = DirectiveResolvers<ContextType>;
