@@ -1,5 +1,5 @@
 # docker-compose
-version: '1'
+version: '3'
 
 services:
   # MySQL Database
@@ -14,7 +14,8 @@ services:
     command: --lower_case_table_names=1
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
-      MYSQL_DATABASE: 'exampleDB'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_DATABASE: 'exampledb'
       MYSQL_ROOT_HOST: 0.0.0.0
 
   # AWS Local
