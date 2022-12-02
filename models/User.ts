@@ -1,5 +1,6 @@
 import { Sequelize, Model, DataTypes, InferAttributes } from 'sequelize';
-import { Address, AddressAttributes } from './Address';
+
+import { AddressAttributes } from './Address';
 
 type UserAttributes = InferAttributes<User>;
 
@@ -31,9 +32,11 @@ class User extends Model<UserAttributes> {
       },
     );
 
-    User.belongsTo(Address, { foreignKey: 'addressId', as: 'address' });
     return User;
   }
+  public static associate = ({ Address }) => {
+    User.belongsTo(Address, { foreignKey: 'addressId', as: 'address' });
+  };
 }
 
 export { User, UserAttributes };

@@ -4,7 +4,7 @@ version: '3'
 services:
   # MySQL Database
   database:
-    platform: linux/x86_64
+    platform: linux/amd64
     image: mysql/mysql-server:8.0
     restart: 'no'
     ports:
@@ -14,9 +14,10 @@ services:
     command: --lower_case_table_names=1
     environment:
       MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_USER: 'root'
       MYSQL_PASSWORD: 'password'
-      MYSQL_DATABASE: 'exampledb'
-      MYSQL_ROOT_HOST: 0.0.0.0
+      MYSQL_DATABASE: 'example'
+      MYSQL_HOST: localhost
 
   # AWS Local
   localstack:

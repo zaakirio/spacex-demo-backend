@@ -25,6 +25,9 @@ class Address extends Model<AddressAttributes> {
 
     return Address;
   }
+  public static associate = ({ User }) => {
+    Address.hasMany(User, { foreignKey: 'addressId', as: 'users' });
+  };
 }
 
 export { Address, AddressAttributes };
