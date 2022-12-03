@@ -1,11 +1,16 @@
-import { Sequelize, Model, DataTypes, InferAttributes } from 'sequelize';
+import { Sequelize, Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize';
+import { User } from './User';
 
-type AddressAttributes = InferAttributes<Address>;
+type AddressAttributes = InferAttributes<Address, { omit: 'users' }>;
+type AddressCreationAttributes = InferCreationAttributes<Address, { omit: 'users' }>;
 
-class Address extends Model<AddressAttributes> {
-  declare id?: string;
+class Address extends Model<AddressAttributes, AddressCreationAttributes> {
+  declare id: CreationOptional<string>;
   declare address?: string | null;
   declare postcode?: string | null;
+  declare users?: NonAttribute<User[]>;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
   static initModel(sequelize: Sequelize) {
     Address.init(
@@ -17,6 +22,8 @@ class Address extends Model<AddressAttributes> {
         },
         address: { type: DataTypes.STRING, allowNull: true },
         postcode: { type: DataTypes.STRING, allowNull: true },
+        createdAt: { type: DataTypes.DATE, allowNull: false },
+        updatedAt: { type: DataTypes.DATE, allowNull: false },
       },
       {
         sequelize,

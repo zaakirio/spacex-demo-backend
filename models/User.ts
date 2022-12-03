@@ -1,17 +1,29 @@
-import { Sequelize, Model, DataTypes, InferAttributes } from 'sequelize';
+import {
+  Sequelize,
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  ForeignKey,
+  NonAttribute,
+  CreationOptional,
+} from 'sequelize';
 
-import { AddressAttributes } from './Address';
+import { Address } from './Address';
 
-type UserAttributes = InferAttributes<User>;
+type UserAttributes = InferAttributes<User, { omit: 'address' }>;
+type UserCreationAttributes = InferCreationAttributes<User, { omit: 'address' }>;
 
-class User extends Model<UserAttributes> {
-  declare id?: string;
+class User extends Model<UserAttributes, UserCreationAttributes> {
+  declare id: CreationOptional<string>;
   declare firstName?: string | null;
   declare contactNumber?: string;
   declare email?: string;
   declare profileImage?: string;
-  declare addressId?: string;
-  declare address?: AddressAttributes;
+  declare addressId?: ForeignKey<User['id']>;
+  declare address?: NonAttribute<Address>;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
   static initModel(sequelize: Sequelize) {
     User.init(
@@ -25,7 +37,8 @@ class User extends Model<UserAttributes> {
         contactNumber: { type: DataTypes.STRING, allowNull: true },
         email: { type: DataTypes.STRING, allowNull: true },
         profileImage: { type: DataTypes.STRING, allowNull: true },
-        addressId: { type: DataTypes.UUID, allowNull: false },
+        createdAt: { type: DataTypes.DATE, allowNull: false },
+        updatedAt: { type: DataTypes.DATE, allowNull: false },
       },
       {
         sequelize,
