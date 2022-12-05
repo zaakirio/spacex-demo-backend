@@ -1,9 +1,8 @@
 import { AuthScope } from '../config';
 import { db } from '../models';
+import { User } from '../models/User';
 
-import { UserAttributes } from '../models/User';
-
-const get = async ({ userId }: { userId: string }, authScope: AuthScope): Promise<UserAttributes> => {
+const get = async ({ userId }: { userId: string }, authScope: AuthScope): Promise<User> => {
   const user = await db.User.findByPk(userId);
   if (!user) {
     throw new Error('Controller:User::Could not find user.');
@@ -12,7 +11,7 @@ const get = async ({ userId }: { userId: string }, authScope: AuthScope): Promis
   return user;
 };
 
-const fromAuth = async (authScope: AuthScope): Promise<UserAttributes | undefined> => {
+const fromAuth = async (authScope: AuthScope): Promise<User | undefined> => {
   if (!authScope.userId) {
     return undefined;
   }

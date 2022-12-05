@@ -37,4 +37,4 @@ class Address extends Model<AddressAttributes, AddressCreationAttributes> {
   };
 }
 
-export { Address, AddressAttributes };
+export { Address };

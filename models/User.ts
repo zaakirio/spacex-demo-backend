@@ -52,4 +52,4 @@ class User extends Model<UserAttributes, UserCreationAttributes> {
   };
 }
 
-export { User, UserAttributes };
+export { User };
