@@ -10,8 +10,8 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  if: ${{ false }}
   test-server:
+    if: ${{ false }}
     timeout-minutes: 15
     runs-on: ubuntu-latest
 
