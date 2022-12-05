@@ -11,10 +11,22 @@ import {
 
 import { Address } from './Address';
 
-type UserAttributes = InferAttributes<User, { omit: 'address' }>;
-type UserCreationAttributes = InferCreationAttributes<User, { omit: 'address' }>;
+type OmitTypes = 'address';
 
-class User extends Model<UserAttributes, UserCreationAttributes> {
+class User extends Model<
+  InferAttributes<
+    User,
+    {
+      omit: OmitTypes;
+    }
+  >,
+  InferCreationAttributes<
+    User,
+    {
+      omit: OmitTypes;
+    }
+  >
+> {
   declare id: CreationOptional<string>;
   declare firstName?: string | null;
   declare contactNumber?: string;

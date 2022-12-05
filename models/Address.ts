@@ -1,10 +1,22 @@
 import { Sequelize, Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from 'sequelize';
 import { User } from './User';
 
-type AddressAttributes = InferAttributes<Address, { omit: 'users' }>;
-type AddressCreationAttributes = InferCreationAttributes<Address, { omit: 'users' }>;
+type OmitTypes = 'users';
 
-class Address extends Model<AddressAttributes, AddressCreationAttributes> {
+class Address extends Model<
+  InferAttributes<
+    Address,
+    {
+      omit: OmitTypes;
+    }
+  >,
+  InferCreationAttributes<
+    Address,
+    {
+      omit: OmitTypes;
+    }
+  >
+> {
   declare id: CreationOptional<string>;
   declare address?: string | null;
   declare postcode?: string | null;
