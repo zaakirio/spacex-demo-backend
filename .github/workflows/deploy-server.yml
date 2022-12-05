@@ -10,7 +10,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
-  if: github.repository != 'Level-Software-Development/template-backend'
+  if: ${{ false }}
   test-server:
     timeout-minutes: 15
     runs-on: ubuntu-latest
