@@ -24,17 +24,15 @@ const sequelize = new Sequelize({
 
 const db = {
   sequelize,
-  Address: Address.initModel(sequelize),
   User: User.initModel(sequelize),
+  Address: Address.initModel(sequelize),
 };
 
-Object.keys(db)
-  .map(key => db[key])
-  .forEach((model: any) => {
-    if (model.associate) {
-      model.associate(db);
-    }
-  });
+Object.keys(db).map(key => {
+  if (db[key].associate) {
+    db[key].associate(db);
+  }
+});
 
 const sync = async () => {
   await sequelize.sync({ force: false });

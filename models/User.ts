@@ -1,16 +1,41 @@
-import { Sequelize, Model, DataTypes, InferAttributes } from 'sequelize';
-import { Address, AddressAttributes } from './Address';
+import {
+  Sequelize,
+  Model,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  ForeignKey,
+  NonAttribute,
+  CreationOptional,
+} from 'sequelize';
 
-type UserAttributes = InferAttributes<User>;
+import { Address } from './Address';
 
-class User extends Model<UserAttributes> {
-  declare id?: string;
+type OmitTypes = 'address';
+
+class User extends Model<
+  InferAttributes<
+    User,
+    {
+      omit: OmitTypes;
+    }
+  >,
+  InferCreationAttributes<
+    User,
+    {
+      omit: OmitTypes;
+    }
+  >
+> {
+  declare id: CreationOptional<string>;
   declare firstName?: string | null;
   declare contactNumber?: string;
   declare email?: string;
   declare profileImage?: string;
-  declare addressId?: string;
-  declare address?: AddressAttributes;
+  declare addressId?: ForeignKey<User['id']>;
+  declare address?: NonAttribute<Address>;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
   static initModel(sequelize: Sequelize) {
     User.init(
@@ -24,16 +49,19 @@ class User extends Model<UserAttributes> {
         contactNumber: { type: DataTypes.STRING, allowNull: true },
         email: { type: DataTypes.STRING, allowNull: true },
         profileImage: { type: DataTypes.STRING, allowNull: true },
-        addressId: { type: DataTypes.UUID, allowNull: false },
+        createdAt: { type: DataTypes.DATE, allowNull: false },
+        updatedAt: { type: DataTypes.DATE, allowNull: false },
       },
       {
         sequelize,
       },
     );
 
-    User.belongsTo(Address, { foreignKey: 'addressId', as: 'address' });
     return User;
   }
+  public static associate = ({ Address }) => {
+    User.belongsTo(Address, { foreignKey: 'addressId', as: 'address' });
+  };
 }
 
-export { User, UserAttributes };
+export { User };

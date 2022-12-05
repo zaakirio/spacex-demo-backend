@@ -16,11 +16,9 @@ if [ -n "$1" ]; then
   git pull https://github.com/Level-Software-Development/template-backend
   cp .env-example .env
   if [ -n "$2" ]; then
-    sed -i -e "s/example/$2/" serverless.yml
-    sed -i -e "s/exampleDB/$2/" .env .env-example
+    sed -i -e "s/example/$2/" serverless.yml .env .env-example
   else
-    sed -i -e "s/example/${basename}/" serverless.yml
-    sed -i -e "s/exampleDB/${basename}/" .env .env-example
+    sed -i -e "s/example/${basename}/" serverless.yml .env .env-example
   fi
   sed -i -e "s/example_name/${basename}/" template-readme.md
   rm -rf template-backend.git generateBackend serverless.yml-e template-readme.md-e README.md .env-e .env-example-e
