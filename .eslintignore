@@ -1,2 +1,4 @@
 mysqldata/
 localstack/
+
+common/types/backend.ts
