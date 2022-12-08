@@ -1,7 +1,7 @@
 import { GraphqlContext } from '../../../config';
 import { QueryUserArgs } from '../../../common/types/backend';
 import { userController } from '../../../controllers';
-import { UserAttributes } from '../../../models/User';
+import { User as UserAttributes } from '../../../models/User';
 
 const user = async (rootValue, { input }: QueryUserArgs, context: GraphqlContext): Promise<UserAttributes> => {
   return userController.get(input, context);
