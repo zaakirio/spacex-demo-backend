@@ -64,6 +64,7 @@ export const createApp = async (): Promise<core.Express> => {
       app.use(
         cors(),
         json(),
+        helmet(),
         expressMiddleware(server, {
           context: async ({ req, res }) => {
             const { event, context } = serverlessExpress.getCurrentInvoke();
@@ -79,7 +80,6 @@ export const createApp = async (): Promise<core.Express> => {
             };
           },
         }),
-        helmet(),
       );
       resolve(app);
     };
