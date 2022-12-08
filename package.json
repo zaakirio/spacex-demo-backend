@@ -16,8 +16,13 @@
   "license": "ISC",
   "jest": {
     "globals": {
-      "ts-jest": {
-        "diagnostics": false
+      "transform": {
+        "^.+\\.tsx?$": [
+          "ts-jest",
+          {
+            "diagnostics": false
+          }
+        ]
       }
     },
     "preset": "ts-jest",
