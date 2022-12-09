@@ -1,7 +1,7 @@
 import { db } from '../../models';
-import { User } from '../../models/User';
+import { UserAttributes } from '../../models/User';
 
-const createUser = async (args?: User): Promise<User> => {
+const createUser = async (args?: UserAttributes): Promise<UserAttributes> => {
   return db.User.create({
     ...args,
   });
