@@ -58,7 +58,14 @@ functions:
       - http:
           path: /{proxy+}
           method: any
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - apollographql-client-name
+              - apollographql-client-version
+              - authorization
+              - x-tr-id
+              - content-type
   dbUp:
     handler: functions/dbUp.handler
   dbDown:

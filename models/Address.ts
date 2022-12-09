@@ -49,4 +49,4 @@ class Address extends Model<
   };
 }
 
-export { Address };
+export { Address, Address as AddressAttributes };

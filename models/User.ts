@@ -64,4 +64,4 @@ class User extends Model<
   };
 }
 
-export { User };
+export { User, User as UserAttributes };
