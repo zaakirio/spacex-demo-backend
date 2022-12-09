@@ -30,7 +30,6 @@ jobs:
           key: ${{runner.os}}-${{hashFiles('yarn.lock')}}
 
       - name: If Only Check
-        working-directory: ./backend/
         run: bash checkOnlyInTest.sh
 
       - name: Setup
