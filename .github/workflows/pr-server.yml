@@ -28,6 +28,9 @@ jobs:
           path: 'node_modules'
           key: ${{runner.os}}-${{hashFiles('yarn.lock')}}
 
+      - name: If Only Check
+        run: bash checkOnlyInTest.sh
+
       - name: Setup
         run: yarn
 
