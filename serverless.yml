@@ -245,9 +245,10 @@ resources:
       Properties:
         DBSubnetGroupName:
           Ref: DatabaseSubnetGroup
-        Engine: aurora
+        Engine: aurora-mysql
         EngineMode: serverless
         Port: 3306
+        DeletionProtection: True
         DatabaseName: ${self:service}
         MasterUsername: ${file(serverless-${self:provider.stage}.yml):MYSQL_USERNAME}
         MasterUserPassword: ${file(serverless-${self:provider.stage}.yml):MYSQL_PASSWORD}
@@ -255,5 +256,5 @@ resources:
           - Ref: RDSSecurityGroup
         ScalingConfiguration:
           AutoPause: False
-          MinCapacity: 2
-          MaxCapacity: 256
+          MinCapacity: 1
+          MaxCapacity: 64
