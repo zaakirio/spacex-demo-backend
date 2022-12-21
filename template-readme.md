@@ -10,12 +10,28 @@ Add the neccesary keys to the .env file. Then run:
 yarn run start
 ```
 
-### Linking to docker
+### Create the database
 
-To create a docker container to host the database, run:
+To create a database for the project run:
 
 ```sh
-docker run -it --rm -v $(pwd)/mysqldata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=<YOUR_.ENV_ROOT_PASSWORD> -d -p 3306:3306 --platform linux/x86_64 mysql/mysql-server:8.0
+cd ./infrastructure
+bash start.sh
 ```
 
 ## :dizzy: Deployment
+
+When deploying a project, add the following secrets to your repo settings (under secrets actions) and any project dependant secrets to AWS Systems Manager:
+
+```
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+```
+
+Now remove line 13 from `.github/workflows/deploy-server.yml` and merge your project into the main branch.
+
+AWS Cloudformation will now generate your project.
+
+## :computer: Contributing
+
+Contributions are very welcome, as well as issues created for any updates required.

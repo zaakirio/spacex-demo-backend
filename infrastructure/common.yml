@@ -5,7 +5,7 @@ services:
   # MySQL Database
   database:
     platform: linux/amd64
-    image: mysql/mysql-server:8.0
+    image: mysql/mysql-server:5.7
     restart: 'no'
     ports:
       - '3306:3306'
