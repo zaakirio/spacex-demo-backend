@@ -76,5 +76,4 @@ jobs:
         run: yarn
 
       - name: Deploy Server
-        working-directory: ./server/
         run: yarn deploy
