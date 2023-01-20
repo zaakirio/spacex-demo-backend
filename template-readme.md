@@ -1,4 +1,4 @@
-# :space_invader: example_name
+# :space_invader: example
 
 > Level Software Development
 
