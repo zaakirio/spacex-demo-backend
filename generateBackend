@@ -16,12 +16,12 @@ if [ -n "$1" ]; then
   git pull https://github.com/Level-Software-Development/template-backend
   cp .env-example .env
   if [ -n "$2" ]; then
-    sed -i -e "s/example/$2/" serverless.yml .env .env-example deploy-server.yml pr-server common.yml start.sh create-bucket.sh
+    sed -i -e "s/example/$2/" serverless.yml .env .env-example infrastructure/start.sh infrastructure/init-aws/create-bucket.sh infrastructure/common.yml .github/workflows/deploy-server.yml .github/workflows/pr-server.yml template-readme.md
   else
-    sed -i -e "s/example/${basename}/" serverless.yml .env .env-example deploy-server.yml pr-server common.yml start.sh create-bucket.sh
+    sed -i -e "s/example/${basename}/" serverless.yml .env .env-example infrastructure/start.sh infrastructure/init-aws/create-bucket.sh infrastructure/common.yml .github/workflows/deploy-server.yml .github/workflows/pr-server.yml template-readme.md
   fi
   sed -i -e "s/example_name/${basename}/" template-readme.md
-  rm -rf template-backend.git generateBackend serverless.yml-e template-readme.md-e README.md .env-e .env-example-e
+  rm -rf template-backend.git generateBackend README.md serverless.yml-e .env-e .env-example-e infrastructure/start.sh-e infrastructure/init-aws/create-bucket.sh-e infrastructure/common.yml-e .github/workflows/deploy-server.yml-e .github/workflows/pr-server.yml-e template-readme.md-e
   mv template-readme.md README.md
   yarn
   git add .
