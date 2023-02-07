@@ -22,7 +22,7 @@ import { sync } from './models';
 import { CreateRoutes } from './controllers/CreateRoutes';
 
 Sentry.AWSLambda.init({
-  dsn: 'https://73ae4deff73f43f3ba593537e51b24fc@o4504241746411520.ingest.sentry.io/4504241755717636',
+  dsn: config.sentryDsn,
   environment: config.nodeEnv,
   integrations: [new Tracing.Integrations.GraphQL(), new Sentry.Integrations.Http({ tracing: true })],
   tracesSampleRate: 1.0,
