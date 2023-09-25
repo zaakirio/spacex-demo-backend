@@ -15,19 +15,10 @@ import * as cors from 'cors';
 import { typeDefs, resolvers } from './routes/graphql';
 import { jwtController } from './controllers';
 import * as Sentry from '@sentry/serverless';
-import * as Tracing from '@sentry/tracing';
 import helmet from 'helmet';
 import { RateLimiterMiddleware } from './middlewares';
 import { sync } from './models';
 import { CreateRoutes } from './controllers/CreateRoutes';
-
-Sentry.AWSLambda.init({
-  dsn: config.sentryDsn,
-  environment: config.nodeEnv,
-  integrations: [new Tracing.Integrations.GraphQL(), new Sentry.Integrations.Http({ tracing: true })],
-  tracesSampleRate: 1.0,
-  debug: config.nodeEnv !== 'production',
-});
 
 const getIpAddress = (request: express.Request): string | undefined => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment

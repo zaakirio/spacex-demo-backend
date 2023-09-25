@@ -40,6 +40,7 @@ export type PaginationInput = {
 export type Query = {
   __typename?: 'Query';
   blockApp: BlockApp;
+  ships?: Maybe<Array<Ship>>;
   user: User;
 };
 
@@ -49,8 +50,26 @@ export type QueryBlockAppArgs = {
 };
 
 
+export type QueryShipsArgs = {
+  input: ShipsInput;
+};
+
+
 export type QueryUserArgs = {
   input: UserInput;
+};
+
+export type Ship = {
+  __typename?: 'Ship';
+  active: Scalars['Boolean'];
+  class?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  image?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type ShipsInput = {
+  pagination: PaginationInput;
 };
 
 export type User = {
@@ -147,6 +166,8 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>;
   PaginationInput: PaginationInput;
   Query: ResolverTypeWrapper<{}>;
+  Ship: ResolverTypeWrapper<Ship>;
+  ShipsInput: ShipsInput;
   String: ResolverTypeWrapper<Scalars['String']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
@@ -163,6 +184,8 @@ export type ResolversParentTypes = {
   Mutation: {};
   PaginationInput: PaginationInput;
   Query: {};
+  Ship: Ship;
+  ShipsInput: ShipsInput;
   String: Scalars['String'];
   User: User;
   UserInput: UserInput;
@@ -184,7 +207,17 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   blockApp?: Resolver<ResolversTypes['BlockApp'], ParentType, ContextType, RequireFields<QueryBlockAppArgs, 'input'>>;
+  ships?: Resolver<Maybe<Array<ResolversTypes['Ship']>>, ParentType, ContextType, RequireFields<QueryShipsArgs, 'input'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'input'>>;
+};
+
+export type ShipResolvers<ContextType = any, ParentType extends ResolversParentTypes['Ship'] = ResolversParentTypes['Ship']> = {
+  active?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  class?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  image?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -204,6 +237,7 @@ export type Resolvers<ContextType = any> = {
   Date?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Ship?: ShipResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 
