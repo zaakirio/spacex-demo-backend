@@ -46,7 +46,7 @@ jobs:
       - name: Spec
         run: yarn spec
         env:
-          MYSQL_DATABASE: example
+          MYSQL_DATABASE: spacex
           MYSQL_HOST: localhost
           MYSQL_USERNAME: root
           MYSQL_PASSWORD: password

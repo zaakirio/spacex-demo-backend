@@ -1,4 +1,4 @@
-service: example
+service: spacex
 
 useDotenv: true
 

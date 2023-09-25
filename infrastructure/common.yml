@@ -16,7 +16,7 @@ services:
       MYSQL_ROOT_PASSWORD: 'password'
       MYSQL_USER: 'root'
       MYSQL_PASSWORD: 'password'
-      MYSQL_DATABASE: 'example'
+      MYSQL_DATABASE: 'spacex'
       MYSQL_HOST: localhost
 
   # AWS Local
