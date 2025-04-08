@@ -18,6 +18,8 @@ const populate = async () => {
     .then(res => res.json())
     .then(data => data.data.ships);
 
+  const missionName = ["Mars", "Moon", "Jupiter", "Saturn", "Uranus", "Neptune"];
+
   await Promise.all(
     ships.map((ship: any) => {
       return db.Ship.create({
@@ -26,7 +28,19 @@ const populate = async () => {
         class: ship.class,
         image: ship.image,
       });
-    }),
+    })
+  );
+
+  const getShips = await db.Ship.findAll();
+
+
+  await Promise.all(
+    missionName.map((missionName: string) => {
+      return db.Mission.create({
+        name: missionName,
+        shipId: getShips[Math.floor(Math.random() * getShips.length)].id,
+      });
+    })
   );
 
   await db.sequelize.close();
