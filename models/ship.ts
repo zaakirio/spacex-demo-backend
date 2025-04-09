@@ -18,9 +18,12 @@ class Ship extends Model<
 > {
   declare id: CreationOptional<string>;
   declare class?: string | null;
+  declare type?: string | null;
   declare name?: string | null;
   declare image?: string | null;
   declare active: boolean;
+  declare home_port?: string | null;
+  declare year_built?: number | null;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
@@ -33,9 +36,12 @@ class Ship extends Model<
           defaultValue: DataTypes.UUIDV4,
         },
         class: { type: DataTypes.STRING, allowNull: true },
+        type: { type: DataTypes.STRING, allowNull: true },
         name: { type: DataTypes.STRING, allowNull: true },
         image: { type: DataTypes.STRING, allowNull: true },
         active: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+        home_port: { type: DataTypes.STRING, allowNull: true },
+        year_built: { type: DataTypes.INTEGER, allowNull: true },
         createdAt: { type: DataTypes.DATE, allowNull: false },
         updatedAt: { type: DataTypes.DATE, allowNull: false },
       },

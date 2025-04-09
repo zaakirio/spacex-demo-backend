@@ -54,6 +54,10 @@ export type QueryShipsArgs = {
   input: ShipsInput;
 };
 
+export type QueryMissionsArgs = {
+  input: MissionsInput;
+};
+
 
 export type QueryUserArgs = {
   input: UserInput;
@@ -68,8 +72,19 @@ export type Ship = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type Mission = {
+  __typename?: 'Mission';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  shipId: Scalars['ID'];
+};
+
 export type ShipsInput = {
   pagination: PaginationInput;
+};
+
+export type MissionsInput = {
+  shipId: Scalars['String'];
 };
 
 export type User = {
@@ -88,7 +103,11 @@ export type UserInput = {
   userId: Scalars['String'];
 };
 
-
+export interface QueryShipsMissingAttributesArgs {
+  input: {
+    attributes: string[];
+  };
+}
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 

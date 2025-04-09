@@ -13,12 +13,12 @@ const populate = async () => {
   const ships = await fetch('https://spacex-production.up.railway.app/api/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: '{ ships { id name image class active } }' }),
+    body: JSON.stringify({ query: '{ ships { id name image class active home_port year_built type } }' }),
   })
     .then(res => res.json())
     .then(data => data.data.ships);
 
-  const missionName = ["Mars", "Moon", "Jupiter", "Saturn", "Uranus", "Neptune"];
+  const missionName = ["Ceres", "Pallas", "Vesta", "Astraea", "Juno", "Diana", "Hygiea", "Eunomia", "Psyche", "Euphrosyne", "Damocloid", "Centaur", "Dioretsa"];
 
   await Promise.all(
     ships.map((ship: any) => {
@@ -27,6 +27,9 @@ const populate = async () => {
         name: ship.name,
         class: ship.class,
         image: ship.image,
+        home_port: ship.home_port,
+        year_built: ship.year_built,
+        type: ship.type
       });
     })
   );
